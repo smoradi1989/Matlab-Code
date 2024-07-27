@@ -1,0 +1,78 @@
+clc;clear; close all;
+
+%% Input
+[b,a]=uigetfile('*.xlsx');
+[aa, c]=xlsread([a filesep b]);
+
+
+
+for p = 1:numel(aa(:,1))
+    sa=aa(p,1:end);
+x1=[sa(1)*-1,sa(4)];
+x2=[sa(2)*-1,sa(5)];
+x3=[sa(3)*-1,sa(6)];
+
+if x1(2)<9 
+    u = 1;
+elseif  10 <= x1(2) && x1(2) < 50 
+    u = 10;
+ elseif  50 <= x1(2) && x1(2) < 300 
+    u = 40; 
+ elseif  300 <= x1(2) 
+    u = 500;    
+end
+
+y1=[u,u];
+y3=[u*3,u*3];
+y2=[u*2,u*2];
+
+figure(p);
+plot(x1, y1, 'ro-','LineWidth', 1);  % 'o-' specifies markers and lines
+hold on;
+plot(x2, y2,'ro','LineWidth', 1); 
+hold on;
+plot(x3, y3, 'ro-','LineWidth', 1);  % 'o-' specifies markers and lines
+
+line([x1(1), x2(1)], [y1(1), y2(1)], 'Color', 'r', 'LineStyle', '-','LineWidth', 1.5);
+line([x3(1), x2(1)], [y3(1), y2(1)], 'Color', 'r', 'LineStyle', '-','LineWidth', 1.5);
+line([x1(2), x2(2)], [y1(2), y2(2)], 'Color', 'r', 'LineStyle', '-','LineWidth', 1.5);
+line([x3(2), x2(2)], [y3(1), y2(2)], 'Color', 'r', 'LineStyle', '-','LineWidth', 1.5);
+
+smax = min([x1(1), x2(1), x3(1)]);
+d1= x1(1)-smax;
+d2= x2(1)-smax;
+d3= x3(1)-smax;
+
+smax1 = max([x1(2), x2(2), x3(2)]);
+d11= x1(2)-smax1;
+d22= x2(2)-smax1;
+d33= x3(2)-smax1;
+
+text(x1(1)-u*1.8-d1 , y1(1), ['Na+K: ', num2str(x1(1)*-1')], 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'FontSize', 9, 'Color', 'black', 'Position', [x1(1)-0.1, y1(1)]);
+text(x2(1)-u*1.8-d2, y2(1), ['Ca: ', num2str(x2(1)*-1')], 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'FontSize', 9, 'Color', 'black', 'Position', [x1(1)-0.1, y1(1)]);
+text(x3(1)-u*1.8-d3, y3(1), ['Mg: ', num2str(x3(1)*-1')], 'HorizontalAlignment', 'left', 'VerticalAlignment', 'bottom', 'FontSize', 9, 'Color', 'black', 'Position', [x1(1)-0.1, y1(1)]);
+text(x1(2)+u*1.8-d11, y1(2), ['Cl: ', num2str(x1(2)')], 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom', 'FontSize', 9, 'Color', 'black', 'Position', [x1(1)-0.1, y1(1)]);
+text(x2(2)+u*1.8-d22, y2(2), ['HCO_3: ', num2str(x2(2)')], 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom', 'FontSize', 9, 'Color', 'black', 'Position', [x1(1)-0.1, y1(1)]);
+text(x3(2)+u*1.8-d33, y3(2), ['SO_4: ', num2str(x3(2)')], 'HorizontalAlignment', 'right', 'VerticalAlignment', 'bottom', 'FontSize', 9, 'Color', 'black', 'Position', [x1(1)-0.1, y1(1)]);
+
+yline(y1(1), 'k--', 'LineWidth', 0.5);
+yline(y2(1), 'k--', 'LineWidth', 0.5);
+yline(y3(1), 'k--', 'LineWidth', 0.5);
+fill([x1, fliplr(x2)], [y1, fliplr(y2)], 'b', 'FaceAlpha', 0.2);
+fill([x2, fliplr(x3)], [y2, fliplr(y3)], 'b', 'FaceAlpha', 0.2);
+xline(0, 'k--', 'LineWidth', 1.5);
+title('Stiff Diagram');
+
+xlabel('The amout of the Ions');
+axis equal;
+padding = u+1;  % Adjust the padding as needed
+xlim([min([x1-u, x2-u,x3-u]) - padding, max([x1+u, x2+u,x3+u]) + padding]);
+grid on;
+% axis off;
+yticks([]);
+xticks([]);
+saveas(gcf,['Stiff_' c{1+p, 1} '.png']);
+
+end
+disp('this code was developesd by sajjad moradi nazarpoor');
+disp('s.moradi1989@yahoo.com');
